@@ -1,75 +1,91 @@
-//Dom application of elemnts 
-const inputbox = document.getElementById('.inputbox');
-const listcontainer = document.getElementById('.listcontainer');
-const guestlist = document.getElementById('.guestlist');
-const guestname = document.getElementById('.guestname');
-const guestconst = document.getElementById('.guestconst');
-const maxguest = 10;
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("guest-form");
+    const guestList = document.getElementById("guest-list");
+    let guestCount = 0;
+    const maxGuest = 10;
 
- // Function to create a new guest list item
-    const createGuestListItem = (name, isAttending = true) => {
-        const listItem = document.createElement('li');
-        listItem.dataset.name = name; // Store name for easy access (e.g., for editing later)
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-        const guestNameSpan = document.createElement('span');
-        guestNameSpan.classList.add('guest-name');
-        guestNameSpan.textContent = name;
-        listItem.appendChild(guestNameSpan);
+        const guestName = document.getElementById("guest-name").value.trim();
+        if (guestName === "") return;
 
-        const guestStatusSpan = document.createElement('span');
-        guestStatusSpan.classList.add('guest-status');
-        if (isAttending) {
-            guestStatusSpan.classList.add('attending');
-            guestStatusSpan.textContent = '(Attending)';
-        } else {
-            guestStatusSpan.classList.add('not-attending');
-            guestStatusSpan.textContent = '(Not Attending)';
+        if (guestCount >= maxGuest) {
+            alert("Guest list is full! Maximum of 10 guests allowed.");
+            return;
         }
-        listItem.appendChild(guestStatusSpan);
 
-        const actionsDiv = document.createElement('div');
-        actionsDiv.classList.add('guest-actions')
-    }
-  // Handle form submission
-    guestForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Suppress default form submission behavior (page refresh)
+        // Create the main list item and add the guest-entry class
+        const listItem = document.createElement("li");
+        listItem.classList.add("guest-entry");
 
-        const guestName = guestNameInput.value.trim();
+        // Guest Name
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = guestName;
 
-        if (guestName) {
-            if (guestCount >= MAX_GUESTS) {
-                alert(`The guest list is full! Maximum ${MAX_GUESTS} guests allowed.`);
-                guestNameInput.value = ''; // Clear input field
-                return;
+        // Category selector
+        const categorySelect = document.createElement("select");
+        ["Friend", "Family", "Colleague"].forEach(category => {
+            const option = document.createElement("option");
+            option.value = category.toLowerCase();
+            option.textContent = category;
+            categorySelect.appendChild(option);
+        });
+        categorySelect.addEventListener("change", () => {
+            listItem.style.backgroundColor =
+                categorySelect.value === "friend" ? "lightblue" :
+                categorySelect.value === "family" ? "lightgreen" :
+                categorySelect.value === "colleague" ? "lightyellow" : "";
+        });
+
+        // RSVP Toggle Button
+        const rsvpButton = document.createElement("button");
+        rsvpButton.textContent = "Not Attending";
+        rsvpButton.addEventListener("click", () => {
+            if (rsvpButton.textContent === "Not Attending") {
+                rsvpButton.textContent = "Attending";
+                listItem.style.textDecoration = "line-through";
+            } else {
+                rsvpButton.textContent = "Not Attending";
+                listItem.style.textDecoration = "none";
             }
+        });
 
-            const newGuestItem = createGuestListItem(guestName);
-            guestList.appendChild(newGuestItem);
-            guestNameInput.value = ''; // Clear input field
-            updateGuestCount();
-        } else {
-            alert('Please enter a guest name.');
-        }
-    });
-// geusts names not execeeding the maximum limit of 10
-console.log('Guest list initialized. Maximum guests allowed:', maxguest);
-console.log('stacie mucuiya' , 'elssie' , 'jennifer' , 'john' , 'mary' , 'peter' , 'samuel' , 'grace' , 'michael' , 'emily' );
-document.addEventListener('DOMContentLoaded', (event) => {
-  // Now, guestForm can be defined and used here safely
-  const guestForm = document.getElementById('yourFormId'); // Replace 'yourFormId' with the actual ID of your form
+        // Edit Button
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.addEventListener("click", () => {
+            const newName = prompt("Edit Guest Name:", nameSpan.textContent);
+            if (newName && newName.trim() !== "") {
+                nameSpan.textContent = newName.trim();
+            }
+        });
 
-  if (guestForm) {
-    guestForm.addEventListener('submit', (event) => {
-      // Your event handler logic
+        // Remove Button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Remove";
+        deleteButton.addEventListener("click", () => {
+            guestList.removeChild(listItem);
+            guestCount--;
+        });
+
+        // Group RSVP, Edit, Remove buttons in a div for styling
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.classList.add("buttons");
+        buttonsDiv.appendChild(rsvpButton);
+        buttonsDiv.appendChild(editButton);
+        buttonsDiv.appendChild(deleteButton);
+
+        // Timestamp
+        const timestamp = document.createElement("span");
+        const timeAdded = new Date().toLocaleTimeString();
+        timestamp.textContent = `Added at: ${timeAdded}`;
+        timestamp.classList.add("time");
+
+        // Append all elements to the list item
+        listItem.append(nameSpan, categorySelect, buttonsDiv, timestamp);
+        guestList.appendChild(listItem);
+        guestCount++;
+        form.reset();
     });
-  } else {
-    console.error('Guest form not found');
-  }
 });
-// index.js
-
-function AddTask() {
-    // Your code to add a task goes here
-    console.log("AddTask function called!");
-    // ... rest of your function logic
-}

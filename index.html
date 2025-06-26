@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="./index.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>Guest List Manager</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
-<body>
-    <div class="container">
-     <div class="guest-app">
-        <h2>Guests coming </h2>
-        <div class="row">
-            <input type="text" id="input-box" placeholder="add your text">
-            <button onclick="AddTask ()">Add</button>
-        </div>
-        <ul id="list-container">
-       <!--<li>Task 1</li>
-        <li>Task 2</li>
-        <li>Task 3</li>--> 
-    </ul>
-     </div>   
-    </div>
-      <!-- Your HTML content -->
-       <button onclick="AddTask()">Add</button>
+<body class="container">
+    <h1>Event Guest List</h1>
+    <form id="guest-form" autocomplete="off">
+        <input 
+            type="text" 
+            id="guest-name" 
+            class="guest-input"
+            placeholder="Enter guest's name" 
+            required
+        >
+        <button type="submit" class="add-btn">Add Guest</button>
+    </form>
+    <ul id="guest-list" class="guest-list"></ul>
+    <script src="./index.js"></script>
 </body>
 </html>
